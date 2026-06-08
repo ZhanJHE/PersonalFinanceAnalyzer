@@ -1,0 +1,192 @@
+<UserControl x:Class="PersonalFinanceAnalyzer.Views.TransactionView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="800">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- ═══ Row 0: DataGrid (top, takes most space) ═══ -->
+        <Grid Grid.Row="0">
+            <!-- Empty state hint -->
+            <TextBlock Text="暂无匹配记录，试试调整筛选条件或新增一笔。"
+                       Visibility="{Binding Transactions.Count, Converter={StaticResource IntToVis}}"
+                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                       FontSize="16" Foreground="#9E9E9E" TextWrapping="Wrap" Margin="20"/>
+
+            <DataGrid ItemsSource="{Binding Transactions}"
+                      AutoGenerateColumns="False" IsReadOnly="True"
+                      RowHeight="30" FontSize="14">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="{Binding CategoryName, Converter={StaticResource CategoryColor}, ConverterParameter=0.15}"/>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="日期" Binding="{Binding TransactionDate}" Width="110"/>
+                    <DataGridTextColumn Header="类别" Binding="{Binding CategoryName}" Width="100"/>
+                    <DataGridTextColumn Header="类型" Binding="{Binding Type, Converter={StaticResource TypeDisplay}}" Width="60"/>
+                    <DataGridTextColumn Header="金额" Binding="{Binding Amount, StringFormat={}¥{0:N2}}" Width="100"/>
+                    <DataGridTextColumn Header="备注" Binding="{Binding Note}" Width="*"/>
+                    <DataGridTemplateColumn Header="操作" Width="130">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="编辑"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.EditTransactionCommand}"
+                                            CommandParameter="{Binding}"
+                                            Background="#1976D2" Foreground="White" Padding="5,2"
+                                            FontSize="12" Margin="0,0,5,0"/>
+                                    <Button Content="删除"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType=UserControl}, Path=DataContext.DeleteTransactionCommand}"
+                                            CommandParameter="{Binding}"
+                                            Background="#F44336" Foreground="White" Padding="5,2"
+                                            FontSize="12"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+
+        <!-- ═══ Row 1: Filter + Search ═══ -->
+        <Border Grid.Row="1" Background="#F5F5F5" CornerRadius="4" Padding="8,4" Margin="0,6,0,6">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="筛选:" VerticalAlignment="Center" Margin="5"/>
+                <DatePicker SelectedDate="{Binding FilterStartDate}" Margin="3" Width="105"/>
+                <TextBlock Text="至" VerticalAlignment="Center" Margin="2"/>
+                <DatePicker SelectedDate="{Binding FilterEndDate}" Margin="3" Width="105"/>
+                <Button Content="筛选" Command="{Binding ApplyFilterCommand}" Margin="3" Padding="8,2" FontSize="12"/>
+                <Button Content="清除" Command="{Binding ClearFilterCommand}" Margin="3" Padding="8,2" FontSize="12"/>
+                <Rectangle Width="10" Opacity="0"/>
+                <TextBlock Text="搜索:" VerticalAlignment="Center" Margin="3"/>
+                <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="130" Margin="3"/>
+                <Button Content="搜索" Command="{Binding ApplyFilterCommand}" Margin="3" Padding="8,2" FontSize="12"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ═══ Row 2: New Transaction + Category Management side by side ═══ -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" MinWidth="8"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: New Transaction Form -->
+            <GroupBox Grid.Column="0" Header="新增记录" Padding="6">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="类型:" VerticalAlignment="Center" Margin="2"/>
+                    <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding TransactionTypes}"
+                              SelectedValue="{Binding NewType}" SelectedValuePath="Value" DisplayMemberPath="Display" Margin="2"/>
+
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="类别:" VerticalAlignment="Center" Margin="2"/>
+                    <ComboBox Grid.Row="0" Grid.Column="3" ItemsSource="{Binding Categories}"
+                              SelectedItem="{Binding SelectedCategory}" DisplayMemberPath="Name" Margin="2"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="金额:" VerticalAlignment="Center" Margin="2"/>
+                    <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding NewAmount}" Margin="2"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="日期:" VerticalAlignment="Center" Margin="2"/>
+                    <DatePicker Grid.Row="1" Grid.Column="3" SelectedDate="{Binding NewDate}" Margin="2"/>
+
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="备注:" VerticalAlignment="Center" Margin="2"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NewNote}" Margin="2"/>
+                    <Button Grid.Row="2" Grid.Column="2" Content="AI推荐" FontSize="11"
+                            Command="{Binding SuggestCategoryCommand}"
+                            Background="#FF9800" Foreground="White" Margin="2" Padding="5,1"/>
+                    <Button Grid.Row="2" Grid.Column="3" Content="新增"
+                            Command="{Binding AddTransactionCommand}"
+                            Background="#4CAF50" Foreground="White" Margin="2" Padding="8,1" FontWeight="Bold"/>
+                </Grid>
+            </GroupBox>
+
+            <!-- Right: Category Management -->
+            <GroupBox Grid.Column="2" Header="类别管理" Padding="6" Width="250">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="28"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="名称:" VerticalAlignment="Center" Margin="2"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding NewCategoryName}" Margin="2"/>
+                    <Button Grid.Row="0" Grid.Column="2" Content="添加" FontSize="11"
+                            Command="{Binding AddCategoryCommand}"
+                            Background="#4CAF50" Foreground="White" Margin="2" Padding="6,1"/>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="类型:" VerticalAlignment="Center" Margin="2"/>
+                    <ComboBox Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"
+                              ItemsSource="{Binding TransactionTypes}"
+                              SelectedValue="{Binding NewCategoryType}"
+                              SelectedValuePath="Value" DisplayMemberPath="Display" Margin="2"/>
+
+                    <!-- Color picker for new category -->
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="颜色:" VerticalAlignment="Center" Margin="2"/>
+                    <ComboBox Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                              ItemsSource="{Binding PresetColors}"
+                              SelectedValue="{Binding NewCategoryColor}"
+                              SelectedValuePath="Code" Margin="2" Height="24">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <ListBox Grid.Row="3" Grid.ColumnSpan="3"
+                             ItemsSource="{Binding Categories}" Margin="2" MaxHeight="140">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Width="16" Height="16" Padding="0" Margin="0,0,6,0"
+                                            Background="{Binding Name, Converter={StaticResource CategoryColor}}"
+                                            BorderThickness="0"
+                                            ToolTip="点击更换颜色"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.ChangeCategoryColorCommand}"
+                                            CommandParameter="{Binding}"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Name}" VerticalAlignment="Center"/>
+                                    <Button Grid.Column="2" Content="×" FontSize="10"
+                                            Command="{Binding RelativeSource={RelativeSource AncestorType=ListBox}, Path=DataContext.DeleteCategoryCommand}"
+                                            CommandParameter="{Binding}"
+                                            Background="#F44336" Foreground="White"
+                                            Width="20" Height="20" Padding="0"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </Grid>
+</UserControl>

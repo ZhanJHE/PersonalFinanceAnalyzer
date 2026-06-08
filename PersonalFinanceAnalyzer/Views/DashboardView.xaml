@@ -1,0 +1,63 @@
+<UserControl x:Class="PersonalFinanceAnalyzer.Views.DashboardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="800">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Summary Cards -->
+        <WrapPanel Grid.Row="0" Margin="0,0,0,20">
+            <Border Background="#E8F5E9" CornerRadius="8" Padding="20" Margin="0,0,10,0" MinWidth="200">
+                <StackPanel>
+                    <TextBlock Text="本月收入" FontSize="14" Foreground="#2E7D32" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding MonthlyIncome, StringFormat={}¥{0:N2}}" FontSize="24"
+                               Foreground="#2E7D32" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#FFEBEE" CornerRadius="8" Padding="20" Margin="10,0" MinWidth="200">
+                <StackPanel>
+                    <TextBlock Text="本月支出" FontSize="14" Foreground="#C62828" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding MonthlyExpense, StringFormat={}¥{0:N2}}" FontSize="24"
+                               Foreground="#C62828" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+            <Border Background="#E3F2FD" CornerRadius="8" Padding="20" Margin="10,0,0,0" MinWidth="200">
+                <StackPanel>
+                    <TextBlock Text="本月结余" FontSize="14" Foreground="#1565C0" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding MonthlyBalance, StringFormat={}¥{0:N2}}" FontSize="24"
+                               Foreground="#1565C0" FontWeight="Bold"/>
+                </StackPanel>
+            </Border>
+        </WrapPanel>
+
+        <!-- Recent Transactions -->
+        <GroupBox Grid.Row="1" Header="近期交易">
+            <Grid>
+                <!-- Empty state hint -->
+                <TextBlock Text="暂无交易记录"
+                           Visibility="{Binding RecentTransactions.Count, Converter={StaticResource IntToVis}}"
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                           FontSize="16" Foreground="#9E9E9E"/>
+
+                <DataGrid ItemsSource="{Binding RecentTransactions}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          RowHeight="30"
+                          FontSize="14">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="日期" Binding="{Binding TransactionDate}" Width="120"/>
+                        <DataGridTextColumn Header="类别" Binding="{Binding CategoryName}" Width="120"/>
+                        <DataGridTextColumn Header="类型" Binding="{Binding Type, Converter={StaticResource TypeDisplay}}" Width="80"/>
+                        <DataGridTextColumn Header="金额" Binding="{Binding Amount, StringFormat={}¥{0:N2}}" Width="120"/>
+                        <DataGridTextColumn Header="备注" Binding="{Binding Note}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

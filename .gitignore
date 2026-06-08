@@ -1,0 +1,27 @@
+# Build outputs
+bin/
+obj/
+publish/
+*.exe
+*.db
+
+# Logs
+logs/
+
+# User-specific files
+appsettings.Development.json
+*.user
+*.suo
+
+# Session exports and temp files
+kimi-export-*.md
+压缩后的对话.md
+
+# Personal data files
+*.xlsx
+
+# IDE
+.vs/
+.vscode/
+.idea/
+*.sln.docstates

@@ -1,0 +1,166 @@
+<UserControl x:Class="PersonalFinanceAnalyzer.Views.AnalysisView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:wpf="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+             mc:Ignorable="d" d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+    </UserControl.Resources>
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Status bar -->
+        <TextBlock Grid.Row="0" Text="{Binding RefreshStatus}"
+                   HorizontalAlignment="Center" FontSize="12" Foreground="#607D8B" Margin="0,0,0,6"/>
+
+        <!-- Three time-range tabs -->
+        <TabControl Grid.Row="1">
+            <!-- Tab 1: 最近一个月 -->
+            <TabItem Header="最近一个月">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <wpf:WpfPlot Grid.Row="0" Grid.Column="0" x:Name="TrendPlot1" Margin="3"/>
+                    <wpf:WpfPlot Grid.Row="0" Grid.Column="1" x:Name="PiePlot1" Margin="3"/>
+
+                    <!-- Chart legend: category colors + date range -->
+                    <Border Grid.Row="1" Grid.ColumnSpan="2" Background="#F9F9F9" CornerRadius="4" Padding="8,4" Margin="0,4,0,0">
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding CategoryBreakdown1Month}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
+                                            <Ellipse Width="10" Height="10" Margin="0,0,3,0" VerticalAlignment="Center"
+                                                     Fill="{Binding CategoryName, Converter={StaticResource CategoryColor}}"/>
+                                            <TextBlock Text="{Binding CategoryName}" FontSize="11" Foreground="#666" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="{Binding DateRangeLabel1, StringFormat=数据范围：{0}}" FontSize="10" Foreground="#999" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Grid.Row="2" Grid.ColumnSpan="2" Content="AI 分析最近一个月"
+                            Command="{Binding GenerateAiReport1MonthCommand}"
+                            Background="#1976D2" Foreground="White" Padding="12,5"
+                            FontSize="12" FontWeight="Bold" Margin="0,6,0,0"
+                            HorizontalAlignment="Center"/>
+                </Grid>
+            </TabItem>
+
+            <!-- Tab 2: 最近三个月 -->
+            <TabItem Header="最近三个月">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <wpf:WpfPlot Grid.Row="0" Grid.Column="0" x:Name="TrendPlot3" Margin="3"/>
+                    <wpf:WpfPlot Grid.Row="0" Grid.Column="1" x:Name="PiePlot3" Margin="3"/>
+
+                    <Border Grid.Row="1" Grid.ColumnSpan="2" Background="#F9F9F9" CornerRadius="4" Padding="8,4" Margin="0,4,0,0">
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding CategoryBreakdown3Months}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
+                                            <Ellipse Width="10" Height="10" Margin="0,0,3,0" VerticalAlignment="Center"
+                                                     Fill="{Binding CategoryName, Converter={StaticResource CategoryColor}}"/>
+                                            <TextBlock Text="{Binding CategoryName}" FontSize="11" Foreground="#666" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="{Binding DateRangeLabel3, StringFormat=数据范围：{0}}" FontSize="10" Foreground="#999" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Grid.Row="2" Grid.ColumnSpan="2" Content="AI 分析最近三个月"
+                            Command="{Binding GenerateAiReport3MonthsCommand}"
+                            Background="#388E3C" Foreground="White" Padding="12,5"
+                            FontSize="12" FontWeight="Bold" Margin="0,6,0,0"
+                            HorizontalAlignment="Center"/>
+                </Grid>
+            </TabItem>
+
+            <!-- Tab 3: 最近半年 -->
+            <TabItem Header="最近半年">
+                <Grid Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <wpf:WpfPlot Grid.Row="0" Grid.Column="0" x:Name="TrendPlot6" Margin="3"/>
+                    <wpf:WpfPlot Grid.Row="0" Grid.Column="1" x:Name="PiePlot6" Margin="3"/>
+
+                    <Border Grid.Row="1" Grid.ColumnSpan="2" Background="#F9F9F9" CornerRadius="4" Padding="8,4" Margin="0,4,0,0">
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding CategoryBreakdown6Months}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="0,0,10,0">
+                                            <Ellipse Width="10" Height="10" Margin="0,0,3,0" VerticalAlignment="Center"
+                                                     Fill="{Binding CategoryName, Converter={StaticResource CategoryColor}}"/>
+                                            <TextBlock Text="{Binding CategoryName}" FontSize="11" Foreground="#666" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <TextBlock Text="{Binding DateRangeLabel6, StringFormat=数据范围：{0}}" FontSize="10" Foreground="#999" Margin="0,2,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Grid.Row="2" Grid.ColumnSpan="2" Content="AI 分析最近半年"
+                            Command="{Binding GenerateAiReport6MonthsCommand}"
+                            Background="#F57C00" Foreground="White" Padding="12,5"
+                            FontSize="12" FontWeight="Bold" Margin="0,6,0,0"
+                            HorizontalAlignment="Center"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Toast 横幅通知 -->
+        <Border x:Name="ToastBar" Grid.RowSpan="3"
+                HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,50,0,0"
+                Background="#323232" CornerRadius="4" Padding="20,10"
+                Opacity="0" IsHitTestVisible="False">
+            <TextBlock x:Name="ToastText" Text="已刷新" Foreground="White" FontSize="13"/>
+        </Border>
+    </Grid>
+</UserControl>

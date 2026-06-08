@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="PersonalFinanceAnalyzer.Server/PersonalFinanceAnalyzer.Server.csproj" />
+  <Project Path="PersonalFinanceAnalyzer.Tests/PersonalFinanceAnalyzer.Tests.csproj" />
+  <Project Path="PersonalFinanceAnalyzer/PersonalFinanceAnalyzer.csproj" />
+</Solution>
