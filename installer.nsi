@@ -1,9 +1,9 @@
-; 个人收支趋势分析器 — NSIS 安装脚本
+; 个人收支趋势分析器 - NSIS 安装脚本
 ; 使用 NSIS 3.x + 简体中文
 
 Unicode true
 
-; ── 版本信息 ──
+; -- 版本信息 --
 !define PRODUCT_NAME "个人收支趋势分析器"
 !define PRODUCT_VERSION "1.0.0"
 !define PRODUCT_PUBLISHER "PersonalFinanceAnalyzer"
@@ -12,24 +12,24 @@ Unicode true
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 
-; ── 引入 MUI2 ──
+; -- 引入 MUI2 --
 !include "MUI2.nsh"
 !include "FileFunc.nsh"
 
-; ── 安装页面 ──
+; -- 安装页面 --
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_LICENSE "LICENSE"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 
-; ── 卸载页面 ──
+; -- 卸载页面 --
 !insertmacro MUI_UNPAGE_INSTFILES
 
-; ── 语言设置 ──
+; -- 语言设置 --
 !insertmacro MUI_LANGUAGE "SimpChinese"
 
-; ── 安装程序属性 ──
+; -- 安装程序属性 --
 Name "${PRODUCT_NAME} ${PRODUCT_VERSION}"
 OutFile "PersonalFinanceAnalyzer_Setup.exe"
 InstallDir "$PROGRAMFILES64\${PRODUCT_NAME}"
@@ -70,7 +70,7 @@ Section "MainSection" SEC01
     WriteRegDword ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "NoRepair" 1
 SectionEnd
 
-; ── 卸载段 ──
+; -- 卸载段 --
 Section Uninstall
     ; 自动关闭正在运行的程序
     ExecWait 'taskkill /F /IM PersonalFinanceAnalyzer.exe 2>nul'

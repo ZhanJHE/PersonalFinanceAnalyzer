@@ -16,6 +16,8 @@ appsettings.Development.json
 # Session exports and temp files
 kimi-export-*.md
 压缩后的对话.md
+当前会话摘要_*.md
+Session*.md
 
 # Personal data files
 *.xlsx

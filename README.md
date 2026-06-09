@@ -83,8 +83,9 @@
 | 后端代理转发 | 客户端不直接调 DeepSeek，经后端中转 | ✅ |
 | 使用次数限额 | 免费用户 10 次/月，会员 100 次/月 | ✅ |
 | AI 仅登录可用 | 未登录时按钮不可用并提示 | ✅ |
-| 消费分析 | 本周/本月/上月三种报告模板 | ✅ |
-| 独立弹窗展示 | AI 报告以独立窗口弹出，不占页面空间 | ✅ |
+| 消费分析 | 1个月/3个月/6个月三种时间范围独立分析 | ✅ |
+| Markdown 渲染 | AI 报告支持 Markdown 格式化显示 | ✅ |
+| 未登录提示 | 未登录时弹窗询问是否前往登录 | ✅ |
 
 ### 账户与安全
 
@@ -92,7 +93,8 @@
 |------|------|------|
 | 用户注册 / 登录 | JWT 认证，密码 BCrypt 哈希 | ✅ |
 | Token 持久化 | DPAPI 加密 Token 存本地，启动自动恢复 | ✅ |
-| 数据云端同步 | 全量上传/下载，Last-Write-Wins 合并 | ✅ |
+| 数据云端同步 | 全量上传/下载，SHA256 哈希比对快速检查 | ✅ |
+| 同步冲突解决 | 保留本地/保留云端/逐条处理 三选一 | ✅ |
 | 同步状态栏 | 底部状态栏显示同步状态 | ✅ |
 | HTTPS 加密 | 客户端与服务器间通信加密 | ✅ |
 | Rate Limiting | 登录10次/分钟、注册5次/分钟、AI 30次/分钟 | ✅ |
@@ -156,8 +158,11 @@ PersonalFinanceAnalyzer.slnx
 │   ├── Views/                            XAML 界面
 │   │   ├── DashboardView.xaml             概览卡片 + 近期交易
 │   │   ├── TransactionView.xaml           新增表单 + 类别管理 + DataGrid
-│   │   ├── AnalysisView.xaml              ScottPlot 图表 + AI 面板
+│   │   ├── AnalysisView.xaml              三个独立 Tab 图表
 │   │   ├── LoginWindow.xaml              登录/注册弹窗
+│   │   ├── AboutWindow.xaml              关于窗口
+│   │   ├── AiReportWindow.xaml           AI 报告弹窗
+│   │   ├── SyncConflictWindow.xaml       同步冲突窗口
 │   │   ├── EditTransactionWindow.xaml     编辑记录弹窗
 │   │   └── WeChatImportGuide.xaml         微信导入引导窗口
 │   │
@@ -184,7 +189,7 @@ PersonalFinanceAnalyzer.slnx
     ├── Controllers/
     │   ├── AuthController.cs             注册 / 登录
     │   ├── AiController.cs               AI 代理（限额检查 → DeepSeek → 返结果）
-    │   └── SyncController.cs             数据同步（上传 / 下载）
+    │   └── SyncController.cs             数据同步（上传 / 下载 / 哈希比对）
     ├── Models/
     │   ├── User.cs                       用户账户
     │   ├── ServerTransaction.cs          云端交易记录
