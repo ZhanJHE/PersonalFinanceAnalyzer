@@ -1,0 +1,13 @@
+<Application x:Class="PersonalFinanceAnalyzer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:PersonalFinanceAnalyzer.Helpers"
+             ShutdownMode="OnMainWindowClose">
+    <Application.Resources>
+        <helpers:IntToVisibilityConverter x:Key="IntToVis"/>
+        <helpers:InverseBoolToVisibilityConverter x:Key="InverseBoolToVis"/>
+        <helpers:TypeDisplayConverter x:Key="TypeDisplay"/>
+        <helpers:CategoryColorConverter x:Key="CategoryColor"/>
+        <helpers:ColorCodeBrushConverter x:Key="ColorCodeBrushConverter"/>
+    </Application.Resources>
+</Application>

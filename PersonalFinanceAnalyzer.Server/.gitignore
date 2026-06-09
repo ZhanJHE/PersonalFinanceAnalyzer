@@ -1,0 +1,15 @@
+# Build results
+bin/
+obj/
+
+# Development configuration (contains MySQL credentials)
+appsettings.Development.json
+
+# Database
+*.db
+*.db-shm
+*.db-wal
+
+# OS
+.DS_Store
+Thumbs.db
